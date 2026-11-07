@@ -1,0 +1,2 @@
+# LF everywhere, so a plugin zip has the same checksum whoever builds it.
+* text=auto eol=lf
