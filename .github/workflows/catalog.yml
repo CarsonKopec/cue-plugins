@@ -1,0 +1,52 @@
+# Builds every plugin and publishes the catalog Cue downloads from:
+# https://github.com/<owner>/<repo>/releases/download/catalog/index.json
+name: Catalog
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: catalog-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  test:
+    # Runs against Cue's default branch on GitHub, which needs Cue 0.2.0 or newer.
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install "cue @ git+https://github.com/CarsonKopec/Cue" pytest pytest-asyncio
+      - run: python -m pytest
+
+  publish:
+    if: github.event_name != 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Check and build
+        # --published refuses a plugin whose files changed while its version didn't.
+        run: |
+          python build.py --check
+          python build.py --published "https://github.com/${{ github.repository }}/releases/download/catalog/index.json"
+      - name: Upload to the catalog release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release view catalog >/dev/null 2>&1 || gh release create catalog --latest=false \
+            --title "Cue plugin catalog" \
+            --notes "Cue installs plugins from here. Updated automatically on every push to main."
+          # Zips first, so the new index.json never points at a zip that isn't there yet.
+          gh release upload catalog dist/*.zip --clobber
+          gh release upload catalog dist/index.json --clobber

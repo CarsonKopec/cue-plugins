@@ -1,0 +1,9 @@
+[plugin]
+name = "anime"
+version = "1.0.0"
+title = "HiAnime"
+description = "Anime from the HiAnime catalog, with SUB/DUB, server subtitles and auto-skip."
+author = "CarsonKopec"
+homepage = "https://github.com/CarsonKopec/cue-plugins"
+requires = "0.2.0"
+providers = ["anime"]

@@ -1,0 +1,9 @@
+[plugin]
+name = "hydra"
+version = "1.0.0"
+title = "HydraHD"
+description = "Movies and TV from the HydraHD catalog, played through its VixSrc server with subtitles."
+author = "CarsonKopec"
+homepage = "https://github.com/CarsonKopec/cue-plugins"
+requires = "0.2.0"
+providers = ["hydra"]

@@ -1,0 +1,9 @@
+[plugin]
+name = "ffplay"
+version = "1.0.0"
+title = "ffplay"
+description = "Play in ffplay, FFmpeg's small player. It starts at your resume point and sends any headers a source needs."
+author = "CarsonKopec"
+homepage = "https://github.com/CarsonKopec/cue-plugins"
+requires = "0.2.0"
+players = ["ffplay"]
