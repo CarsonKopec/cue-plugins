@@ -12,14 +12,16 @@ cue plugin install anime
 
 | Plugin | Folder | Adds |
 |---|---|---|
-| HiAnime | [providers/anime](providers/anime/) | The `anime` provider: the HiAnime catalog, SUB/DUB, server subtitles, auto-skip |
-| HydraHD | [providers/hydra](providers/hydra/) | The `hydra` provider: movies and TV from HydraHD through its VixSrc server, with subtitles |
+| HiAnime | [providers/anime](providers/anime/) | The `anime` provider, in the Anime group: the HiAnime catalog, SUB/DUB, server subtitles, auto-skip |
+| HydraHD | [providers/hydra](providers/hydra/) | The `hydra` provider, in the Movies and Shows groups: movies and TV from HydraHD through its VixSrc server, with subtitles |
 | ffplay | [players/ffplay](players/ffplay/) | The `ffplay` player: FFmpeg's player, started at your resume point with any headers a source needs |
 | Default app | [players/default-app](players/default-app/) | The `default-app` player: local files open in your system's default video app |
 
 Plugins are sorted by what they add: `providers/` for media sources, `players/` for
 media players. A new kind of plugin gets a new top-level folder; the build picks it up.
-Each plugin needs Cue 0.2.0 or newer (its `requires` says exactly which).
+Each plugin needs Cue 0.2.0 or newer (its `requires` says exactly which). Cue 0.3.0
+and newer search by group, and providers here name their groups with a `groups`
+attribute; a provider that returns both movies and series also sets `mixed_media = True`.
 
 ## How Cue gets them
 

@@ -224,6 +224,7 @@ class AnimeProvider:
 
     name = "anime"
     title = "HiAnime"
+    groups = ("anime",)
     audio_modes = ("sub", "dub")
     settings = (
         Setting("language", "Audio", "choice", "sub", ("sub", "dub"), "SUB keeps the original audio; DUB plays dubbed episodes."),

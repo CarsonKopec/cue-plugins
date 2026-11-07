@@ -1,6 +1,6 @@
 [plugin]
 name = "hydra"
-version = "1.0.0"
+version = "1.1.0"
 title = "HydraHD"
 description = "Movies and TV from the HydraHD catalog, played through its VixSrc server with subtitles."
 author = "CarsonKopec"

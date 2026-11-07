@@ -1,6 +1,6 @@
 [plugin]
 name = "anime"
-version = "1.0.0"
+version = "1.1.0"
 title = "HiAnime"
 description = "Anime from the HiAnime catalog, with SUB/DUB, server subtitles and auto-skip."
 author = "CarsonKopec"

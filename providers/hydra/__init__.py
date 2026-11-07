@@ -176,6 +176,8 @@ def _is_challenge(html: str) -> bool:
 class HydraProvider:
     name = "hydra"
     title = "HydraHD"
+    groups = ("movies", "shows")
+    mixed_media = True  # movies are media_type "movie"; series seasons are not
     skip_supported = False
     settings = (
         Setting("base_url", "Website", "text", "https://hydrahd.com", help="The site's root address."),
