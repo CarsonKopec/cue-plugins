@@ -1,0 +1,9 @@
+[plugin]
+name = "subdl"
+version = "1.0.0"
+title = "SubDL"
+description = "Subtitles for movies and TV in many languages from SubDL. Needs a free API key from your subdl.com account."
+author = "CarsonKopec"
+homepage = "https://github.com/CarsonKopec/cue-plugins"
+requires = "0.5.0"
+subtitles = ["subdl"]

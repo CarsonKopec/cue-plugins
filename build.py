@@ -4,7 +4,7 @@
     python build.py --check              # only check the plugins
     python build.py --published URL      # also refuse changed plugins whose version wasn't raised
 
-Plugins live one folder deep in a category folder (providers/, players/, ...). Only the
+Plugins live one folder deep in a category folder (providers/, players/, subtitles/, ...). Only the
 standard library is used, so this runs without Cue installed. Zips are reproducible:
 the same files always give the same zip on the same Python, so an unchanged plugin
 keeps its checksum. index.json links the zips relatively, so it and the zips are
@@ -68,12 +68,12 @@ def read_manifest(folder: Path) -> dict:
         value = table.get(key, "0" if key == "requires" else None)
         if not isinstance(value, str) or not VERSION.fullmatch(value):
             raise SystemExit(f"{where}: {key} must be a version number like 1.2.0")
-    for key in ("providers", "players"):
+    for key in ("providers", "players", "subtitles"):
         names = table.get(key, [])
         if not isinstance(names, list) or not all(isinstance(item, str) and item for item in names):
             raise SystemExit(f"{where}: {key} must be a list of names")
-    if not table.get("providers") and not table.get("players"):
-        raise SystemExit(f"{where}: list the providers or players it adds")
+    if not table.get("providers") and not table.get("players") and not table.get("subtitles"):
+        raise SystemExit(f"{where}: list the providers, players or subtitle sources it adds")
     if not (folder / "__init__.py").is_file():
         raise SystemExit(f"{where}: __init__.py is missing")
     return table
@@ -118,6 +118,7 @@ def entries(root: Path = ROOT) -> list[tuple[dict, Path]]:
             "category": category,
             "providers": list(table.get("providers", [])),
             "players": list(table.get("players", [])),
+            "subtitles": list(table.get("subtitles", [])),
             "url": f"{name}-{table['version']}.zip",
             "content": content_digest(folder),
         }, folder))

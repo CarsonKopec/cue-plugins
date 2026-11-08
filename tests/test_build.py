@@ -16,11 +16,12 @@ from cue.plugins.manifest import read_manifest
 
 def test_every_plugin_is_valid_for_cue() -> None:
     plugins = build.entries()
-    assert {entry["category"] for entry, _ in plugins} == {"providers", "players"}
+    assert {entry["category"] for entry, _ in plugins} == {"providers", "players", "subtitles"}
     for entry, folder in plugins:
         manifest = read_manifest(folder)  # Cue's own check
         assert (manifest.name, manifest.version) == (entry["name"], entry["version"])
-        assert entry["providers"] if entry["category"] == "providers" else entry["players"]
+        assert entry[entry["category"]]  # what a plugin adds matches the folder it's in
+        assert manifest.subtitles == tuple(entry["subtitles"])
 
 
 def test_build_is_reproducible_and_readable_by_cue(tmp_path: Path) -> None:

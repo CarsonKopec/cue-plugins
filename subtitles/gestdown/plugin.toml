@@ -1,0 +1,9 @@
+[plugin]
+name = "gestdown"
+version = "1.0.0"
+title = "Addic7ed (Gestdown)"
+description = "Subtitles for TV shows from Addic7ed, through Gestdown's API. No account or key needed; movies aren't covered."
+author = "CarsonKopec"
+homepage = "https://github.com/CarsonKopec/cue-plugins"
+requires = "0.5.0"
+subtitles = ["gestdown"]

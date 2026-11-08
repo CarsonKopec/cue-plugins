@@ -14,7 +14,7 @@ from cue.store import Store
 
 ROOT = Path(__file__).resolve().parent.parent
 
-for category in ("providers", "players"):
+for category in ("providers", "players", "subtitles"):
     for _plugin in PluginManager(ROOT / category).load_enabled():
         assert _plugin.loaded, f"{_plugin.name}: {_plugin.error}"
 

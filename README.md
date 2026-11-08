@@ -16,12 +16,17 @@ cue plugin install anime
 | HydraHD | [providers/hydra](providers/hydra/) | The `hydra` provider, in the Movies and Shows groups: movies and TV from HydraHD through its VixSrc server, with subtitles |
 | ffplay | [players/ffplay](players/ffplay/) | The `ffplay` player: FFmpeg's player, started at your resume point with any headers a source needs |
 | Default app | [players/default-app](players/default-app/) | The `default-app` player: local files open in your system's default video app |
+| Addic7ed (Gestdown) | [subtitles/gestdown](subtitles/gestdown/) | The `gestdown` subtitle source: TV subtitles from Addic7ed through Gestdown's API, no key needed |
+| SubDL | [subtitles/subdl](subtitles/subdl/) | The `subdl` subtitle source: movie and TV subtitles in many languages; needs a free API key from subdl.com |
 
 Plugins are sorted by what they add: `providers/` for media sources, `players/` for
-media players. A new kind of plugin gets a new top-level folder; the build picks it up.
+media players, `subtitles/` for subtitle sources. A new kind of plugin gets a new
+top-level folder; the build picks it up.
 Each plugin needs Cue 0.2.0 or newer (its `requires` says exactly which). Cue 0.3.0
 and newer search by group, and providers here name their groups with a `groups`
 attribute; a provider that returns both movies and series also sets `mixed_media = True`.
+Subtitle sources need Cue 0.5.0 or newer, which searches every subtitle source that's set
+up at once. Set them up (a SubDL key, say) in Cue's Plugins menu, on the **Subtitles** tab.
 
 ## How Cue gets them
 
@@ -56,8 +61,8 @@ already installed is offered as an update when the catalog has a higher version.
 
 ## Adding a plugin
 
-Make a folder named after the plugin under `providers/` or `players/`, with a
-`plugin.toml` and an `__init__.py`:
+Make a folder named after the plugin under `providers/`, `players/` or `subtitles/`,
+with a `plugin.toml` and an `__init__.py`:
 
 ```toml
 [plugin]
@@ -70,10 +75,18 @@ homepage = "https://github.com/CarsonKopec/cue-plugins"
 requires = "0.2.0"            # the oldest Cue it works with
 providers = ["mine"]          # what it registers
 players = []
+subtitles = []                # subtitle sources (Cue 0.5.0 and newer)
 ```
 
+A subtitle source registers a `SubtitleBackend` from `cue.subtitles.registry`, whose
+`create(options, http, folder)` returns an object with a `name`, an async
+`find(show, episode, languages, *, file_path=None)` returning `SubtitleTrack`s, and an
+async `fetch(track)` returning the downloaded file's path. Settings it declares (an API
+key with `required=True`, say) appear on Cue's Subtitles tab and are stored in
+`[subtitles.<name>]`. [subtitles/gestdown](subtitles/gestdown/) is the smallest example.
+
 [Cue's README](https://github.com/CarsonKopec/Cue#writing-a-plugin) covers the plugin
-API: registering providers and players, settings forms, the web toolkit for providers
+API: registering providers, players and subtitle sources, settings forms, the web toolkit for providers
 that read web pages, and `ProcessPlayer` for programs Cue can't control. The plugins
 here are working examples. Add tests for it under [tests/](tests/).
 
