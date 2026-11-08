@@ -1,8 +1,9 @@
 """Open files in the operating system's default app for their type.
 
 Windows uses the app set in Settings → Default apps (Media Player, Movies & TV, …),
-macOS uses ``open`` (QuickTime, IINA, …) and Linux ``xdg-open``. Only files on this
-PC are opened: a streaming link would land in a web browser, which can't play it.
+macOS uses ``open`` (QuickTime, IINA, …) and Linux ``xdg-open``. Those apps can't open
+a stream's link (Windows would hand it to a web browser), so this player says it only
+opens files (``links=False``) and Cue downloads each streamed episode for it first.
 Cue hands the file over and steps back, so press q in Cue when you're done.
 """
 
@@ -52,8 +53,8 @@ class DefaultAppPlayer:
         self, url: str, *, start: float | None = None, headers: Mapping[str, str] | None = None,
         title: str | None = None, extra_args: Sequence[str] = (),
     ) -> None:
-        if not is_local_file(url):
-            raise PlayerError("The default app plays files on this PC only; pick VLC or mpv for streams.")
+        if not is_local_file(url):  # only on a Cue too old to download streams for it
+            raise PlayerError("This Cue can't download streams for the default app; update Cue, or pick VLC or mpv.")
         try:
             self._opener(url)
         except OSError as exc:
@@ -70,13 +71,17 @@ class DefaultAppPlayer:
         self._open = False
 
 
+# Cue 0.4 and newer download a streamed episode for players that only open files.
+_FILES_ONLY = {"links": False} if "links" in getattr(PlayerBackend, "__dataclass_fields__", {}) else {}
+
 register_player(PlayerBackend(
     name="default-app",
     title="Default app",
     locate=lambda options: "your system's default app for each file type",
     create=lambda program, options: DefaultAppPlayer(options),
-    description="Opens files on this PC (the Local provider and downloads) in your default video app. "
-                "Streams need VLC or mpv. Cue can't skip intros or save your place in it.",
+    description="Opens episodes in your default video app, such as Windows' Media Player. A streamed episode "
+                "is downloaded first (needs FFmpeg or yt-dlp). Cue can't skip intros or save your place in it.",
     controls=False,
     has_program=False,
+    **_FILES_ONLY,
 ))

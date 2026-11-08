@@ -31,7 +31,10 @@ def test_ffplay_plugin_arguments_and_failures() -> None:
 async def test_default_app_plugin_opens_local_files_only(tmp_path: Path) -> None:
     from cue_plugins.default_app import DefaultAppPlayer
 
-    assert player_origin("default-app") == "plugin:default-app" and not players()["default-app"].has_program
+    backend = players()["default-app"]
+    assert player_origin("default-app") == "plugin:default-app" and not backend.has_program
+    # It only opens files, so Cue downloads a streamed episode for it first.
+    assert getattr(backend, "links", False) is False
     opened = []
     player = DefaultAppPlayer(opener=opened.append)
     media = tmp_path / "Episode 1.mkv"
@@ -40,7 +43,8 @@ async def test_default_app_plugin_opens_local_files_only(tmp_path: Path) -> None
     assert opened == [str(media)] and player.running
     await player.quit()
     assert not player.running
-    with pytest.raises(PlayerError, match="files on this PC only"):
+    # Only a Cue too old to download for it would hand it a link.
+    with pytest.raises(PlayerError, match="can't download streams"):
         await DefaultAppPlayer(opener=opened.append).launch("https://cdn.example/a.m3u8")
     with pytest.raises(PlayerError, match="can't be controlled"):
         await player.command("seek", 1)

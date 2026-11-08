@@ -1,8 +1,8 @@
 [plugin]
 name = "default-app"
-version = "1.0.0"
+version = "1.1.0"
 title = "Default app"
-description = "Open files on this PC in your system's default video app (Media Player, QuickTime, or whatever xdg-open picks)."
+description = "Play in your system's default video app (Media Player, QuickTime, or whatever xdg-open picks); streams are downloaded first."
 author = "CarsonKopec"
 homepage = "https://github.com/CarsonKopec/cue-plugins"
 requires = "0.2.0"
